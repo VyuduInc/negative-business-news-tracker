@@ -29,3 +29,14 @@ Traceback (most recent call last):
     fig_sentiment = px.histogram(df, x='sentiment_score', bins=20,
                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: histogram() got an unexpected keyword argument 'bins'
+2025-08-29 12:34:21.946 Uncaught app exception
+Traceback (most recent call last):
+  File "/Users/jeremywilliams/Workspace/business_news_negative_tracker/.venv/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 600, in _run_script
+    exec(code, module.__dict__)
+  File "/Users/jeremywilliams/Workspace/business_news_negative_tracker/app.py", line 154, in <module>
+    fig_sentiment = px.histogram(df, x='sentiment_score', bins=20,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: histogram() got an unexpected keyword argument 'bins'
+Starting news collection...
+Fetching from: https://feeds.reuters.com/reuters/businessNews
+Fetching from: https://rss.cnn.com/rss/money_news_companies.rss

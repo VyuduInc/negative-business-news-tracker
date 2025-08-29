@@ -18,7 +18,9 @@ st.set_page_config(
 # Initialize news collector
 @st.cache_resource
 def get_news_collector():
-    return NegativeNewsCollector()
+    # Use persistent volume path if available (Modal deployment)
+    db_path = "/data/news_data.db" if os.path.exists("/data") else "news_data.db"
+    return NegativeNewsCollector(db_path)
 
 collector = get_news_collector()
 
