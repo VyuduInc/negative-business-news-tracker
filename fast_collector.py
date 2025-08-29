@@ -178,7 +178,7 @@ class FastNewsCollector:
         return all_articles
     
     def save_articles(self, articles: List[Dict]) -> int:
-        """Save articles to database (thread-safe)"""
+        """Save articles to database (thread-safe) with auto-cleanup"""
         if not articles:
             return 0
             
@@ -206,6 +206,16 @@ class FastNewsCollector:
                         saved_count += 1
                 except:
                     continue
+            
+            # Auto-cleanup: Delete old articles after every 5 new articles
+            if saved_count >= 5:
+                cursor.execute('''
+                DELETE FROM negative_news 
+                WHERE created_at < datetime('now', '-48 hours')
+                ''')
+                deleted_count = cursor.rowcount
+                if deleted_count > 0:
+                    print(f"🧹 Auto-cleanup: Deleted {deleted_count} articles older than 48 hours")
             
             conn.commit()
             conn.close()

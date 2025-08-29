@@ -263,7 +263,7 @@ class NegativeNewsCollector:
         return articles
     
     def save_articles(self, articles: List[Dict]):
-        """Save articles to database"""
+        """Save articles to database with auto-cleanup"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -291,6 +291,16 @@ class NegativeNewsCollector:
             except Exception as e:
                 print(f"Error saving article: {e}")
                 continue
+        
+        # Auto-cleanup after every 5 new articles
+        if saved_count >= 5:
+            cursor.execute('''
+            DELETE FROM negative_news 
+            WHERE created_at < datetime('now', '-48 hours')
+            ''')
+            deleted_count = cursor.rowcount
+            if deleted_count > 0:
+                print(f"🧹 Auto-cleanup: Deleted {deleted_count} articles older than 48 hours")
         
         conn.commit()
         conn.close()
