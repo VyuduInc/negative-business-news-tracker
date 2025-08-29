@@ -485,10 +485,15 @@ class NegativeNewsCollector:
         return saved_count
 
 if __name__ == "__main__":
-    collector = NegativeNewsCollector()
-    
-    # Try to get NewsAPI key from environment
-    newsapi_key = os.getenv('NEWSAPI_KEY')
-    
-    # Update news
-    collector.update_news(newsapi_key)
+    # Try enhanced collector first, fallback to standard
+    try:
+        from enhanced_collector import EnhancedNegativeNewsCollector
+        print("🚀 Using Enhanced Collector with 100+ sources...")
+        collector = EnhancedNegativeNewsCollector()
+        saved, total = collector.comprehensive_update(min_articles=100)
+        print(f"Enhanced collection complete: {saved} saved, {total} total")
+    except Exception as e:
+        print(f"Enhanced collector failed ({e}), using standard collector...")
+        collector = NegativeNewsCollector()
+        newsapi_key = os.getenv('NEWSAPI_KEY')
+        collector.update_news(newsapi_key)

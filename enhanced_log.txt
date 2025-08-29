@@ -1,0 +1,107 @@
+🚀 COMPREHENSIVE NEWS COLLECTION STARTING...
+Target: 100+ articles
+============================================================
+✅ APIs collected: 0 articles
+Fetching from 89 RSS sources...
+Processing: https://feeds.reuters.com/reuters/businessNews
+Processing: https://rss.cnn.com/rss/money_news_companies.rss
+Processing: https://feeds.bloomberg.com/markets/news.rss
+Processing: https://www.cnbc.com/id/10000664/device/rss/rss.html
+Processing: https://feeds.marketwatch.com/marketwatch/realtimeheadlines/
+Processing: https://feeds.fortune.com/fortune/headlines
+Processing: https://www.wsj.com/xml/rss/3_7455.xml
+Processing: https://feeds.finance.yahoo.com/rss/2.0/headline
+Processing: https://www.ft.com/rss/companies
+Processing: https://www.businessinsider.com/rss
+Processing: https://feeds.feedburner.com/barrons/topstories
+Processing: https://feeds.feedburner.com/investorplace/stocks
+Processing: https://www.economist.com/business/rss.xml
+Processing: https://feeds.feedburner.com/MarketWatch-StockMarketNews
+Processing: https://feeds.benzinga.com/benzinga
+Processing: https://feeds.feedburner.com/motleyfool
+Processing: https://feeds.feedburner.com/seeking_alpha
+Processing: https://feeds.investorplace.com/investorplace/stocks
+Processing: https://techcrunch.com/feed/
+Processing: https://feeds.feedburner.com/venturebeat/SZYF
+Processing: https://feeds.arstechnica.com/arstechnica/index
+Processing: https://www.theverge.com/rss/index.xml
+Processing: https://feeds.feedburner.com/crunchbase_news
+Processing: https://www.retaildive.com/feeds/news/
+Processing: https://feeds.constructiondive.com/constructiondive
+Processing: https://www.manufacturingdive.com/feeds/news/
+Processing: https://www.restaurantdive.com/feeds/news/
+Processing: https://www.utilitydive.com/feeds/news/
+Processing: https://www.bankingdive.com/feeds/news/
+Processing: https://www.biopharmadive.com/feeds/news/
+Processing: https://www.healthcaredive.com/feeds/news/
+Processing: https://www.educationdive.com/feeds/news/
+Processing: https://www.supplychaindive.com/feeds/news/
+Processing: https://www.cybersecuritydive.com/feeds/news/
+Processing: https://www.cfo.com/feed/
+Processing: https://feeds.seattletimes.com/businesstechnology/
+Processing: https://www.latimes.com/business/rss2.0.xml
+Processing: https://feeds.chicagotribune.com/chicagotribune/business
+Processing: https://feeds.boston.com/boston/business
+Processing: https://feeds.washingtonpost.com/rss/business
+Processing: https://feeds.sfgate.com/business/
+Processing: https://feeds.dallasnews.com/business/
+Processing: https://feeds.denverpost.com/business/
+Processing: https://feeds.houstonchronicle.com/business/
+Processing: https://feeds.bbci.co.uk/news/business/rss.xml
+Processing: https://feeds.reuters.com/reuters/UKBusinessNews
+Processing: https://feeds.reuters.com/reuters/JPBusinessNews
+Processing: https://www.scmp.com/rss/91/feed
+Processing: https://feeds.feedburner.com/ndtvprofit-latest
+Processing: https://www.dw.com/en/business/rss
+Processing: https://feeds.france24.com/en/business/rss
+Processing: https://www.thelocal.se/rss/business/
+Processing: https://www.spiegel.de/wirtschaft/index.rss
+Processing: https://feeds.feedburner.com/zerohedge/feed
+Processing: https://feeds.feedburner.com/entrepreneur/latest
+Processing: https://feeds.inc.com/home/updates
+Processing: https://feeds.hbr.org/harvardbusiness
+Processing: https://feeds.feedburner.com/fastcompany/headlines
+Processing: https://feeds.strategy-business.com/sb/all
+Processing: https://feeds.mckinsey.com/McKinsey
+Processing: https://feeds.law360.com/sections/bankruptcy
+Processing: https://feeds.americanbanker.com/americanbanker/
+Processing: https://feeds.creditunionjournal.com/
+Processing: https://feeds.nationalrealestateinvestor.com/
+Processing: https://feeds.shrm.org/shrm/news
+Processing: https://feeds.workforce.com/workforce/
+Processing: https://feeds.benefitspro.com/
+Processing: https://feeds.mergermarket.com/
+Processing: https://feeds.thedeal.com/
+Processing: https://feeds.acquisition-intl.com/
+Processing: https://feeds.tradepub.com/industry-week
+Processing: https://feeds.manufacturing.net/
+Processing: https://feeds.foodlogistics.com/
+Processing: https://feeds.logisticsmgmt.com/
+Processing: https://feeds.warehousemgmt.com/
+Processing: https://feeds.federalregister.gov/agencies/securities-and-exchange-commission
+Processing: https://feeds.cftc.gov/cftc/PressReleases
+Processing: https://feeds.ftc.gov/ftc/news-and-events/press-releases
+Processing: https://feeds.dol.gov/dol/news
+Processing: https://feeds.reuters.com/reuters/CABusinessNews
+Processing: https://feeds.reuters.com/reuters/AUBusinessNews
+Processing: https://feeds.economic-times.indiatimes.com/news/economy
+Processing: https://feeds.business-standard.com/rss/economy.rss
+Processing: https://feeds.globaltimes.cn/business/
+Processing: https://feeds.restructuring-today.com/
+Processing: https://feeds.debtwire.com/
+Processing: https://feeds.turnaroundmanagement.com/
+Processing: https://feeds.abiworld.org/
+Processing: https://feeds.bankruptcy-law.com/
+✅ RSS collected: 53 articles
+Fetching from Reddit business discussions...
+Fetching from Hacker News...
+✅ Social collected: 1 articles
+📊 Total unique articles: 54
+💾 Saved 10 new articles to database
+⚠️  Target missed: 54/100 articles
+Consider enabling more API keys for better coverage
+
+🏁 COLLECTION COMPLETE
+📊 Articles saved: 10
+📈 Total collected: 54
+🎯 Target (100+): ❌ MISSED
