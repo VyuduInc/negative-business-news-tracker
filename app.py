@@ -136,52 +136,35 @@ if crisis_types:
 # Sort by newest to oldest (created_at first, then published)
 df = df.sort_values(['created_at', 'published'], ascending=[False, False])
 
-# News-style metrics dashboard
-st.markdown("""
-<div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
-    <h3 style="color: white; margin: 0; text-align: center;">📊 CRISIS DASHBOARD</h3>
-    <p style="color: white; margin: 0.5rem 0 0 0; text-align: center; opacity: 0.9;">Real-time business failure monitoring</p>
-</div>
-""", unsafe_allow_html=True)
+# Separate LinkedIn trending articles
+linkedin_df = df[df['source'] == 'LinkedIn Trending'].head(10)
+regular_df = df[df['source'] != 'LinkedIn Trending']
 
-col1, col2, col3, col4 = st.columns(4)
+# News-style metrics dashboard
+st.markdown("### 📊 CRISIS DASHBOARD")
+st.markdown("*Real-time business failure monitoring across 40+ sources*")
+
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
-    st.markdown("""
-    <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h2 style="color: #e74c3c; margin: 0; font-size: 2rem;">{}</h2>
-        <p style="color: #7f8c8d; margin: 0.5rem 0 0 0;">Crisis Alerts</p>
-    </div>
-    """.format(len(df)), unsafe_allow_html=True)
+    st.metric("🚨 Crisis Alerts", len(df))
 
 with col2:
     avg_sentiment = df['sentiment_score'].mean() if len(df) > 0 else 0
     severity = "HIGH" if avg_sentiment < -0.1 else "MEDIUM" if avg_sentiment < 0.05 else "LOW"
-    color = "#e74c3c" if avg_sentiment < -0.1 else "#f39c12" if avg_sentiment < 0.05 else "#27ae60"
-    st.markdown("""
-    <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h2 style="color: {}; margin: 0; font-size: 1.5rem;">{}</h2>
-        <p style="color: #7f8c8d; margin: 0.5rem 0 0 0;">Crisis Severity</p>
-    </div>
-    """.format(color, severity), unsafe_allow_html=True)
+    st.metric("⚡ Crisis Severity", severity)
 
 with col3:
     sources_count = df['source'].nunique() if len(df) > 0 else 0
-    st.markdown("""
-    <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h2 style="color: #3498db; margin: 0; font-size: 2rem;">{}</h2>
-        <p style="color: #7f8c8d; margin: 0.5rem 0 0 0;">News Sources</p>
-    </div>
-    """.format(sources_count), unsafe_allow_html=True)
+    st.metric("📰 News Sources", sources_count)
 
 with col4:
     recent_articles = len(df[df['created_at'] >= datetime.now() - timedelta(hours=24)]) if len(df) > 0 else 0
-    st.markdown("""
-    <div style="background: white; padding: 1rem; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <h2 style="color: #9b59b6; margin: 0; font-size: 2rem;">{}</h2>
-        <p style="color: #7f8c8d; margin: 0.5rem 0 0 0;">Last 24 Hours</p>
-    </div>
-    """.format(recent_articles), unsafe_allow_html=True)
+    st.metric("🕒 Last 24 Hours", recent_articles)
+
+with col5:
+    linkedin_count = len(linkedin_df)
+    st.metric("🔗 LinkedIn Trending", linkedin_count)
 
 # Charts
 if len(df) > 0:
@@ -216,18 +199,29 @@ if len(df) > 0:
         fig_sources.update_layout(height=400)
         st.plotly_chart(fig_sources, use_container_width=True)
 
-# News articles list - styled like a news aggregator
-st.markdown("""
-<div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-    <h2 style="color: #2c3e50; margin: 0; font-size: 1.8rem;">🚨 BREAKING: Corporate Crisis News</h2>
-    <p style="color: #7f8c8d; margin: 0.5rem 0 0 0;">Latest bankruptcies, closures, and business failures • Updated continuously</p>
-</div>
-""", unsafe_allow_html=True)
+# LinkedIn trending section
+if len(linkedin_df) > 0:
+    st.markdown("### 🔗 TOP LINKEDIN BUSINESS CRISIS DISCUSSIONS (24H)")
+    st.markdown(f"*Most shared crisis discussions from business professionals*")
+    
+    for idx, article in linkedin_df.iterrows():
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.markdown(f"**[{article['title']}]({article['link']})** 📈")
+            st.markdown(f"*{article['description']}*")
+        with col2:
+            st.markdown("🔥 **Trending**")
+            st.markdown(f"`{article['negative_keywords']}`")
+        st.markdown("---")
 
-st.markdown(f"**{len(df)} crisis alerts** • Sorted by most recent")
+# Main news articles list
+st.markdown("### 🚨 BREAKING: Corporate Crisis News")
+st.markdown(f"*Latest bankruptcies, closures, and business failures from {regular_df['source'].nunique()} sources*")
 
-# Display articles in news aggregator style
-for idx, article in df.iterrows():
+st.markdown(f"**{len(regular_df)} crisis alerts** • Sorted by most recent")
+
+# Display articles in news aggregator style (using regular_df to exclude LinkedIn trending)
+for idx, article in regular_df.iterrows():
     # Parse dates for better display
     try:
         pub_date = pd.to_datetime(article['published']) if pd.notna(article['published']) else None
@@ -299,35 +293,23 @@ for idx, article in df.iterrows():
 
 # Professional news footer
 st.markdown("---")
-st.markdown("""
-<div style="background: #2c3e50; color: white; padding: 2rem; border-radius: 10px; margin: 2rem 0;">
-    <div style="text-align: center; margin-bottom: 1rem;">
-        <h4 style="margin: 0; color: #ecf0f1;">📰 Business Crisis Monitor</h4>
-        <p style="margin: 0.5rem 0 0 0; opacity: 0.8;">Professional business intelligence for corporate failures</p>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
-        <div>
-            <h5 style="color: #3498db; margin: 0 0 0.5rem 0;">📊 Data Sources</h5>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Reuters • Bloomberg • CNN • CNBC<br/>MarketWatch • Fortune • WSJ</p>
-        </div>
-        <div>
-            <h5 style="color: #e74c3c; margin: 0 0 0.5rem 0;">🔄 Updates</h5>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Real-time monitoring<br/>Auto-refresh every 12 hours</p>
-        </div>
-        <div>
-            <h5 style="color: #f39c12; margin: 0 0 0.5rem 0;">🎯 Coverage</h5>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin: 0;">Bankruptcies • Closures<br/>Layoffs • Financial crises</p>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
 
-st.markdown("""
-<div style="text-align: center; padding: 1rem; color: #7f8c8d;">
-    <p style="margin: 0;">⚡ Powered by advanced sentiment analysis and real-time RSS monitoring • All articles link directly to original sources</p>
-</div>
-""", unsafe_allow_html=True)
+# Use columns instead of HTML grid for better compatibility
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("**📊 Data Sources**")
+    st.write("Reuters • Bloomberg • CNN • CNBC • MarketWatch • Fortune • WSJ • Yahoo Finance • Associated Press • Financial Times • Business Insider")
+
+with col2:
+    st.markdown("**🔄 Updates**") 
+    st.write("Real-time monitoring • Auto-refresh every 12 hours • LinkedIn trending integration")
+
+with col3:
+    st.markdown("**🎯 Coverage**")
+    st.write("Bankruptcies • Closures • Layoffs • Financial crises • Corporate restructuring")
+
+st.info("⚡ Powered by advanced sentiment analysis and real-time RSS monitoring • All articles link directly to original sources")
 
 # Debug info (only show in development)
 if os.getenv('DEBUG', '').lower() == 'true':
