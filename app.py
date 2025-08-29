@@ -6,6 +6,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from news_collector import NegativeNewsCollector
 import os
+import time
+import threading
 
 # Page configuration
 st.set_page_config(
@@ -39,13 +41,24 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Crisis categories
+# Crisis categories with "All" option
 st.sidebar.markdown("**📊 Crisis Categories**")
-crisis_types = st.sidebar.multiselect(
-    "Filter by crisis type:",
-    ["bankruptcy", "closure", "layoffs", "losses", "restructuring", "liquidation"],
-    default=[]
+all_crisis_types = ["bankruptcy", "closure", "layoffs", "losses", "restructuring", "liquidation", "investigation", "lawsuit", "fraud", "decline", "struggling"]
+
+crisis_filter_mode = st.sidebar.radio(
+    "Crisis Filter Mode:",
+    ["All Categories", "Specific Categories"],
+    index=0
 )
+
+if crisis_filter_mode == "Specific Categories":
+    crisis_types = st.sidebar.multiselect(
+        "Select crisis types:",
+        all_crisis_types,
+        default=[]
+    )
+else:
+    crisis_types = []  # Empty means show all
 
 # Time range filter
 time_options = {
@@ -68,22 +81,48 @@ sentiment_range = st.sidebar.slider(
 # Keyword filter
 keyword_filter = st.sidebar.text_input("Filter by keyword (optional)")
 
+st.sidebar.markdown("**⚡ Real-time Mode**")
+st.sidebar.write(f"Last update: {datetime.now().strftime('%H:%M:%S')}")
+
+# Simple auto-refresh with meta tag
+auto_refresh = st.sidebar.selectbox(
+    "Auto-refresh interval:",
+    ["Off", "5 minutes", "10 minutes", "30 minutes"],
+    index=0
+)
+
+if auto_refresh != "Off":
+    refresh_seconds = {
+        "5 minutes": 300,
+        "10 minutes": 600, 
+        "30 minutes": 1800
+    }[auto_refresh]
+    
+    st.markdown(f'<meta http-equiv="refresh" content="{refresh_seconds}">', unsafe_allow_html=True)
+    st.sidebar.success(f"🔄 Auto-refresh every {auto_refresh}")
+
 # Manual refresh button
 if st.sidebar.button("🔄 Refresh News Data"):
     with st.spinner("Fetching latest news..."):
         try:
-            # Try to get NewsAPI key from secrets or environment
-            newsapi_key = None
-            try:
-                newsapi_key = st.secrets.get("NEWSAPI_KEY", os.getenv("NEWSAPI_KEY"))
-            except:
-                newsapi_key = os.getenv("NEWSAPI_KEY")
-            
+            # Quick update using standard collector
+            newsapi_key = os.getenv("NEWSAPI_KEY")
             saved_count = collector.update_news(newsapi_key)
             st.sidebar.success(f"Updated! Found {saved_count} new articles")
-            st.rerun()  # Refresh the page to show new data
+            st.rerun()
         except Exception as e:
             st.sidebar.error(f"Update failed: {e}")
+
+if st.sidebar.button("⚡ Fast Update (Local Sources)"):
+    with st.spinner("Quick local news scan..."):
+        try:
+            from fast_collector import FastNewsCollector
+            fast_collector = FastNewsCollector(collector.db_path) 
+            saved_count, total_collected, elapsed_time = fast_collector.fast_update(target_articles=30)
+            st.sidebar.success(f"⚡ {saved_count} new articles in {elapsed_time:.1f}s")
+            st.rerun()
+        except Exception as e:
+            st.sidebar.error(f"Fast update failed: {e}")
 
 # Get news data
 @st.cache_data(ttl=1800)  # Cache for 30 minutes
@@ -128,8 +167,8 @@ if keyword_filter:
     mask = df.apply(lambda row: keyword_filter.lower() in row.astype(str).str.lower().str.cat(sep=' '), axis=1)
     df = df[mask]
 
-# Apply crisis type filter
-if crisis_types:
+# Apply crisis type filter (only if specific categories selected)
+if crisis_filter_mode == "Specific Categories" and crisis_types:
     crisis_mask = df['negative_keywords'].str.lower().str.contains('|'.join(crisis_types), case=False, na=False)
     df = df[crisis_mask]
 

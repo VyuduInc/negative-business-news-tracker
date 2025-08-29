@@ -14,11 +14,13 @@ import os
 import re
 from typing import List, Dict
 from comprehensive_news_sources import ComprehensiveNewsAggregator
+from local_news_sources import LocalNewsSourcesCollector
 
 class EnhancedNegativeNewsCollector:
     def __init__(self, db_path="news_data.db"):
         self.db_path = db_path
         self.aggregator = ComprehensiveNewsAggregator()
+        self.local_collector = LocalNewsSourcesCollector()
         
         # Enhanced negative keywords with categories
         self.negative_keywords = {
@@ -248,12 +250,14 @@ class EnhancedNegativeNewsCollector:
         return processed
     
     def fetch_from_comprehensive_rss(self) -> List[Dict]:
-        """Fetch from all comprehensive RSS feeds"""
+        """Fetch from all comprehensive RSS feeds including local sources"""
         all_articles = []
         
-        print(f"Fetching from {len(self.aggregator.comprehensive_rss_feeds)} RSS sources...")
+        # Combine national and local RSS feeds
+        all_rss_feeds = self.aggregator.comprehensive_rss_feeds + self.local_collector.local_news_rss_feeds
+        print(f"Fetching from {len(all_rss_feeds)} RSS sources ({len(self.aggregator.comprehensive_rss_feeds)} national + {len(self.local_collector.local_news_rss_feeds)} local)...")
         
-        for feed_url in self.aggregator.comprehensive_rss_feeds:
+        for feed_url in all_rss_feeds:
             try:
                 print(f"Processing: {feed_url}")
                 feed = feedparser.parse(feed_url)
@@ -285,7 +289,7 @@ class EnhancedNegativeNewsCollector:
                                 'keyword_category': self.categorize_keywords(found_keywords)
                             })
                 
-                time.sleep(0.5)  # Rate limiting
+                time.sleep(0.2)  # Faster rate limiting for real-time
                 
             except Exception as e:
                 print(f"Error with RSS feed {feed_url}: {e}")
@@ -343,10 +347,14 @@ class EnhancedNegativeNewsCollector:
         
         return saved_count
     
-    def comprehensive_update(self, min_articles=100):
+    def comprehensive_update(self, min_articles=100, real_time_mode=False):
         """Comprehensive update from all available sources"""
-        print("🚀 COMPREHENSIVE NEWS COLLECTION STARTING...")
-        print(f"Target: {min_articles}+ articles")
+        if real_time_mode:
+            print("⚡ REAL-TIME NEWS COLLECTION...")
+            print(f"Target: {min_articles}+ articles (real-time mode)")
+        else:
+            print("🚀 COMPREHENSIVE NEWS COLLECTION STARTING...")
+            print(f"Target: {min_articles}+ articles")
         print("=" * 60)
         
         all_articles = []
