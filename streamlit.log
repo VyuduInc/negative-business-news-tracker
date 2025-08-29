@@ -1,0 +1,31 @@
+
+Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.
+
+
+  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8501
+  Network URL: http://10.0.0.127:8501
+  External URL: http://76.105.75.46:8501
+
+  For better performance, install the Watchdog module:
+
+  $ xcode-select --install
+  $ pip install watchdog
+            
+
+  A new version of Streamlit is available.
+
+  See what's new at https://discuss.streamlit.io/c/announcements
+
+  Enter the following command to upgrade:
+  $ pip install streamlit --upgrade
+
+2025-08-28 22:20:57.643 Uncaught app exception
+Traceback (most recent call last):
+  File "/Users/jeremywilliams/Workspace/business_news_negative_tracker/.venv/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 600, in _run_script
+    exec(code, module.__dict__)
+  File "/Users/jeremywilliams/Workspace/business_news_negative_tracker/app.py", line 154, in <module>
+    fig_sentiment = px.histogram(df, x='sentiment_score', bins=20,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: histogram() got an unexpected keyword argument 'bins'
