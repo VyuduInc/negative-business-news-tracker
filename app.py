@@ -144,24 +144,9 @@ def load_news_data(days_back):
 news_data = load_news_data(days)
 
 if not news_data:
-    st.warning("No negative business news found for the selected time period. Try expanding the time range or refreshing the data.")
-    # Initialize with some sample data if database is empty
-    with st.spinner("Initializing with latest news..."):
-        try:
-            newsapi_key = None
-            try:
-                newsapi_key = st.secrets.get("NEWSAPI_KEY", os.getenv("NEWSAPI_KEY"))
-            except:
-                newsapi_key = os.getenv("NEWSAPI_KEY")
-            
-            saved_count = collector.update_news(newsapi_key)
-            if saved_count > 0:
-                st.success(f"Initialized with {saved_count} articles!")
-                st.rerun()
-            else:
-                st.info("No negative business news found in recent feeds. Check back later or try refreshing.")
-        except Exception as e:
-            st.error(f"Failed to initialize data: {e}")
+    st.warning("📭 No negative business news found for the selected time period.")
+    st.info("👉 **First time setup:** Use the sidebar button '🔄 Update News' to collect initial articles (takes ~2-3 minutes)")
+    st.info("Try expanding the time range or click the update button to refresh data.")
     st.stop()
 
 # Convert to DataFrame
