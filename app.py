@@ -9,6 +9,17 @@ import os
 import time
 import threading
 
+# Download NLTK data on first run (needed for TextBlob)
+import nltk
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt', quiet=True)
+try:
+    nltk.data.find('sentiment/vader_lexicon.zip')
+except LookupError:
+    nltk.download('vader_lexicon', quiet=True)
+
 # Page configuration
 st.set_page_config(
     page_title="Negative Business News Tracker",
@@ -20,8 +31,8 @@ st.set_page_config(
 # Initialize news collector
 @st.cache_resource
 def get_news_collector():
-    # Use persistent volume path if available (Modal deployment)
-    db_path = "/data/news_data.db" if os.path.exists("/data") else "news_data.db"
+    # Use local database path
+    db_path = "news_data.db"
     return NegativeNewsCollector(db_path)
 
 collector = get_news_collector()

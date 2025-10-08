@@ -17,3 +17,15 @@ ENV/
 
 # OS
 .DS_Store
+
+# Logs
+*.log
+
+# Database (local development only)
+news_data.db
+
+# Streamlit secrets (don't commit!)
+.streamlit/secrets.toml
+
+# Modal deployment (not needed for Streamlit Cloud)
+serve_streamlit.py
