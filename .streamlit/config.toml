@@ -1,0 +1,22 @@
+[server]
+# Headless mode for cloud deployment
+headless = true
+
+# Enable CORS for cloud deployment
+enableCORS = false
+enableXsrfProtection = false
+
+# Performance optimizations
+maxUploadSize = 200
+
+[browser]
+# Don't automatically open browser
+gatherUsageStats = false
+
+[theme]
+# Dark theme optimized for news monitoring
+primaryColor = "#FF6B6B"
+backgroundColor = "#0E1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#FAFAFA"
+font = "sans serif"
