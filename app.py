@@ -53,11 +53,22 @@ def get_news_collector():
 
 collector = get_news_collector()
 
-# App header with news aggregator styling
+# Modern 2025 color scheme - CSS variables
 st.markdown("""
-<div style="background: linear-gradient(90deg, #FF6B6B 0%, #FF8E53 100%); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
-    <h1 style="color: white; margin: 0; font-size: 2.5rem; font-weight: bold;">📉 Business Crisis Monitor</h1>
-    <p style="color: white; margin: 0.5rem 0 0 0; font-size: 1.2rem; opacity: 0.9;">Breaking news on bankruptcies, closures, layoffs & corporate failures</p>
+<style>
+    :root {
+        --bg-dark: #2c2c2e;
+        --surface-dark: #3a3a3c;
+        --text-primary: #f5f5f7;
+        --text-secondary: #a8a8a8;
+        --accent-primary: #00d4aa;
+        --alert-warm: #ff9f43;
+        --alert-critical: #ee5a6f;
+    }
+</style>
+<div style="background: linear-gradient(135deg, #2c2c2e 0%, #3a3a3c 100%); padding: 2rem; border-radius: 16px; margin-bottom: 2rem; border: 1px solid rgba(168, 168, 168, 0.1);">
+    <h1 style="color: #f5f5f7; margin: 0; font-size: 2.5rem; font-weight: 600;">📉 Business Crisis Monitor</h1>
+    <p style="color: #a8a8a8; margin: 0.75rem 0 0 0; font-size: 1.1rem;">Real-time tracking of bankruptcies, closures, layoffs & corporate failures</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -191,9 +202,13 @@ df = df.sort_values(['created_at', 'published'], ascending=[False, False])
 linkedin_df = df[df['source'] == 'LinkedIn Trending'].head(10)
 regular_df = df[df['source'] != 'LinkedIn Trending']
 
-# News-style metrics dashboard
-st.markdown("### 📊 CRISIS DASHBOARD")
-st.markdown("*Real-time business failure monitoring across 40+ sources*")
+# Modern metrics dashboard with 2025 colors
+st.markdown("""
+<div style="background: #3a3a3c; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; border: 1px solid rgba(168, 168, 168, 0.1);">
+    <h3 style="color: #f5f5f7; margin: 0; font-size: 1.5rem;">📊 Crisis Dashboard</h3>
+    <p style="color: #a8a8a8; margin: 0.5rem 0 0 0; font-size: 0.95rem;">Real-time monitoring across 40+ national & local sources</p>
+</div>
+""", unsafe_allow_html=True)
 
 col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -250,10 +265,14 @@ if len(df) > 0:
         fig_sources.update_layout(height=400)
         st.plotly_chart(fig_sources, use_container_width=True)
 
-# LinkedIn trending section
+# LinkedIn trending section with modern styling
 if len(linkedin_df) > 0:
-    st.markdown("### 🔗 TOP LINKEDIN BUSINESS CRISIS DISCUSSIONS (24H)")
-    st.markdown(f"*Most shared crisis discussions from business professionals*")
+    st.markdown("""
+    <div style="background: #3a3a3c; padding: 1rem; border-radius: 12px; margin: 1rem 0; border-left: 4px solid #00d4aa;">
+        <h3 style="color: #f5f5f7; margin: 0; font-size: 1.3rem;">🔗 Trending LinkedIn Discussions</h3>
+        <p style="color: #a8a8a8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Most shared crisis discussions (24h)</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     for idx, article in linkedin_df.iterrows():
         col1, col2 = st.columns([4, 1])
@@ -265,11 +284,19 @@ if len(linkedin_df) > 0:
             st.markdown(f"`{article['negative_keywords']}`")
         st.markdown("---")
 
-# Main news articles list
-st.markdown("### 🚨 BREAKING: Corporate Crisis News")
-st.markdown(f"*Latest bankruptcies, closures, and business failures from {regular_df['source'].nunique()} sources*")
+# Main news articles list with modern header
+st.markdown("""
+<div style="background: #3a3a3c; padding: 1.25rem; border-radius: 12px; margin: 1.5rem 0; border-left: 4px solid #ee5a6f;">
+    <h3 style="color: #f5f5f7; margin: 0; font-size: 1.4rem;">🚨 Breaking Corporate Crisis News</h3>
+    <p style="color: #a8a8a8; margin: 0.5rem 0 0 0; font-size: 0.95rem;">Latest bankruptcies, closures, and business failures</p>
+</div>
+""", unsafe_allow_html=True)
 
-st.markdown(f"**{len(regular_df)} crisis alerts** • Sorted by most recent")
+st.markdown(f"""
+<div style="color: #a8a8a8; margin: 0.5rem 0 1rem 0; font-size: 0.9rem;">
+    <strong style="color: #00d4aa;">{len(regular_df)}</strong> crisis alerts from <strong style="color: #00d4aa;">{regular_df['source'].nunique()}</strong> sources • Sorted by newest first
+</div>
+""", unsafe_allow_html=True)
 
 # Display articles in news aggregator style (using regular_df to exclude LinkedIn trending)
 for idx, article in regular_df.iterrows():
@@ -292,19 +319,19 @@ for idx, article in regular_df.iterrows():
     except:
         time_ago = ""
     
-    # News card styling
-    sentiment_color = "#dc3545" if article['sentiment_score'] < -0.2 else "#fd7e14" if article['sentiment_score'] < 0 else "#6c757d"
+    # Modern 2025 news card styling
+    sentiment_color = "#ee5a6f" if article['sentiment_score'] < -0.2 else "#ff9f43" if article['sentiment_score'] < 0 else "#a8a8a8"
     severity_label = "SEVERE" if article['sentiment_score'] < -0.2 else "MODERATE" if article['sentiment_score'] < 0 else "MILD"
     
     st.markdown(f"""
-    <div style="border-left: 4px solid {sentiment_color}; background: white; padding: 1.5rem; margin: 1rem 0; border-radius: 0 8px 8px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-            <span style="background: {sentiment_color}; color: white; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">{severity_label} CRISIS</span>
-            <span style="color: #6c757d; font-size: 0.85rem;">{time_ago}</span>
+    <div style="border-left: 4px solid {sentiment_color}; background: #3a3a3c; padding: 1.5rem; margin: 1rem 0; border-radius: 0 12px 12px 0; border: 1px solid rgba(168, 168, 168, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <span style="background: {sentiment_color}; color: #f5f5f7; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px;">{severity_label}</span>
+            <span style="color: #a8a8a8; font-size: 0.85rem;">{time_ago}</span>
         </div>
-        <h3 style="margin: 0.5rem 0; font-size: 1.4rem; line-height: 1.3;"><a href="{article['link']}" target="_blank" style="color: #2c3e50; text-decoration: none;">{article['title']}</a></h3>
-        <div style="color: #6c757d; font-size: 0.9rem; margin: 0.5rem 0;">
-            <strong>{article['source']}</strong> • {pd.to_datetime(article['published']).strftime('%B %d, %Y at %I:%M %p') if pd.notna(article['published']) else 'Recently published'}
+        <h3 style="margin: 0.5rem 0; font-size: 1.35rem; line-height: 1.4;"><a href="{article['link']}" target="_blank" style="color: #f5f5f7; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#00d4aa'" onmouseout="this.style.color='#f5f5f7'">{article['title']}</a></h3>
+        <div style="color: #a8a8a8; font-size: 0.9rem; margin: 0.75rem 0 0 0;">
+            <strong style="color: #00d4aa;">{article['source']}</strong> • {pd.to_datetime(article['published']).strftime('%B %d, %Y at %I:%M %p') if pd.notna(article['published']) else 'Recently published'}
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -322,22 +349,23 @@ for idx, article in regular_df.iterrows():
         if article['negative_keywords']:
             keywords = article['negative_keywords'].split(',')[:3]
             for keyword in keywords:
-                st.markdown(f'<span style="background: #ffe6e6; color: #d63031; padding: 0.2rem 0.4rem; border-radius: 6px; font-size: 0.8rem; margin: 0.1rem; display: inline-block;">{keyword.strip()}</span>', unsafe_allow_html=True)
+                st.markdown(f'<span style="background: rgba(238, 90, 111, 0.15); color: #ee5a6f; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; margin: 0.2rem; display: inline-block; border: 1px solid rgba(238, 90, 111, 0.3);">{keyword.strip()}</span>', unsafe_allow_html=True)
     
-    # Read more button
+    # Modern read more button with accent color
     if article['link']:
         st.markdown(f"""
         <a href="{article['link']}" target="_blank" style="
-            background: linear-gradient(90deg, #FF6B6B 0%, #FF8E53 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            background: #00d4aa;
+            color: #2c2c2e;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: bold;
+            font-weight: 600;
             display: inline-block;
-            margin: 0.5rem 0;
-        ">📖 Read Full Story →</a>
+            margin: 0.75rem 0 0.5rem 0;
+            transition: all 0.2s;
+        " onmouseover="this.style.background='#00f5c4'; this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#00d4aa'; this.style.transform='translateY(0)'">📖 Read Full Story →</a>
         """, unsafe_allow_html=True)
     
     st.markdown("---")

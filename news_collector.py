@@ -442,13 +442,35 @@ class NegativeNewsCollector:
         
         return articles
 
-    def update_news(self, newsapi_key=None, min_articles=100):
-        """Main method to update news database - ensures minimum article count"""
-        print("Starting comprehensive news collection...")
+    def update_news(self, newsapi_key=None, min_articles=20):
+        """Main method to update news database - fast refresh"""
+        print("🔄 Quick news refresh...")
         
-        # Fetch from main RSS feeds
-        rss_articles = self.fetch_news_from_rss()
-        print(f"Found {len(rss_articles)} negative articles from main RSS feeds")
+        # Fetch from main RSS feeds (limited to first 10 feeds for speed)
+        rss_articles = []
+        for feed_url in self.rss_feeds[:10]:
+            try:
+                feed = feedparser.parse(feed_url)
+                for entry in feed.entries[:10]:
+                    title = entry.get('title', '')
+                    description = entry.get('description', '') or entry.get('summary', '')
+                    full_text = f"{title} {description}"
+                    found_keywords = self.contains_negative_keywords(full_text)
+                    if found_keywords:
+                        sentiment = self.analyze_sentiment(full_text)
+                        if sentiment <= 0.4 or len(found_keywords) >= 2:
+                            rss_articles.append({
+                                'title': title,
+                                'link': entry.get('link', ''),
+                                'description': self.clean_html(description)[:300],
+                                'published': entry.get('published', ''),
+                                'source': feed.feed.get('title', feed_url.split('//')[1].split('/')[0]),
+                                'sentiment_score': sentiment,
+                                'negative_keywords': ','.join(found_keywords)
+                            })
+            except:
+                continue
+        print(f"Found {len(rss_articles)} negative articles from RSS feeds")
         
         # Fetch from NewsAPI if key provided
         newsapi_articles = []
@@ -456,27 +478,8 @@ class NegativeNewsCollector:
             newsapi_articles = self.fetch_news_from_newsapi(newsapi_key)
             print(f"Found {len(newsapi_articles)} negative articles from NewsAPI")
         
-        # Fetch LinkedIn trending
-        linkedin_articles = self.fetch_linkedin_trending()
-        print(f"Found {len(linkedin_articles)} trending articles from LinkedIn")
-        
-        # Combine all articles
-        all_articles = rss_articles + newsapi_articles + linkedin_articles
-        
-        # If we don't have enough articles, fetch from additional sources
-        if len(all_articles) < min_articles:
-            print(f"Need more articles ({len(all_articles)}/{min_articles}), fetching additional sources...")
-            additional_articles = self.fetch_additional_sources()
-            all_articles.extend(additional_articles)
-            print(f"Added {len(additional_articles)} articles from additional sources")
-        
-        # Continue fetching until we have enough (or exhaust sources)
-        attempts = 0
-        while len(all_articles) < min_articles and attempts < 3:
-            print(f"Still need more articles ({len(all_articles)}/{min_articles}), trying broader search...")
-            broader_articles = self.fetch_additional_sources()
-            all_articles.extend(broader_articles)
-            attempts += 1
+        # Combine all articles (skip slow LinkedIn and additional sources)
+        all_articles = rss_articles + newsapi_articles
         
         # Remove duplicates based on URL
         unique_articles = []
